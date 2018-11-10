@@ -9,12 +9,21 @@
 import UIKit
 
 class ToDoListViewController: UITableViewController {
+    
+    
 
-    let itemArray = ["mission1", "mission2","mission3"]
+    var itemArray = ["mission1", "mission2","mission3"]
+    
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String]{
+            itemArray = items
+        }
+        
     }
     
     
@@ -47,6 +56,32 @@ class ToDoListViewController: UITableViewController {
     
 
 
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "add a to do ", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "add item", style: .default) { (action) in
+            
+           self.itemArray.append(textField.text!)
+            
+           self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+            
+           self.tableView.reloadData()
 
+        }
+        
+        alert.addAction(action)
+        
+        alert.addTextField { (alertTextField) in
+            
+            alertTextField.placeholder = "create new task"
+           
+            textField = alertTextField
+        }
+        
+        present(alert,animated: true,completion: nil )
+    }
+    
 }
 
